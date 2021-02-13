@@ -1,0 +1,39 @@
+ - hosts: localhost
+   tasks:
+        - name: "Setting Up Repo for Docker"
+          yum_repository:
+                  name: "DockerRepo"
+                  baseurl: "https://download.docker.com/linux/centos/7/x86_64/stable/"
+                  gpgcheck: no
+                  description: "Docker-repo"
+
+        - name: "Installing Docker"
+          command: "yum install docker-ce --nobest -y"
+        - name: "Starting Docker services"
+          service:
+                  name: docker
+                  state: started
+        - name: "Installing dependencies"
+          pip:
+                  name: docker-py
+                  state: present
+        - name: "Creating directory where webpage to be stored"
+          file:
+                  path: /webpage
+                  state: directory
+
+        - name: "Copying webpage to be launched inside docker"
+          copy:
+
+                  dest: "/webpage/index.html"
+                  src: index.html     
+         
+        - name: "Launching a Docker Container"
+          community.general.docker_container:
+                  name: dockerweb
+                  image: httpd
+                  ports: "8080:80"
+                  volumes:
+                          - /webpages:/usr/local/apache2/htdocs/
+                  exposed_ports: 80
+                                    
