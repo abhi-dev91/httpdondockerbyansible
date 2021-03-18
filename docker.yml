@@ -19,13 +19,13 @@
                   state: present
         - name: "Creating directory where webpage to be stored"
           file:
-                  path: /webpage
+                  path: /webpages
                   state: directory
 
         - name: "Copying webpage to be launched inside docker"
           copy:
 
-                  dest: "/webpage/index.html"
+                  dest: "/webpages/index.html"
                   src: index.html     
          
         - name: "Launching a Docker Container"
